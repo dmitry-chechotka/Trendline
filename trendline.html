@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trendline Weight Tracker</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/apple-touch-icon.png"
+    />
+    <meta name="apple-mobile-web-app-title" content="Trendline" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js"></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDWsdDfrUrd4g-F4AOqpt6HKlFK4HJY65o",
+        authDomain: "trendline-mvp.firebaseapp.com",
+        projectId: "trendline-mvp",
+        storageBucket: "trendline-mvp.firebasestorage.app",
+        messagingSenderId: "145984945026",
+        appId: "1:145984945026:web:63fda3187d1c3c34352d9b",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Check authentication state before allowing access to dashboard
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          // User is not logged in, redirect to login page
+          window.location.href = "index.html";
+        }
+        // If user is logged in, page continues to load normally
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container" id="mainDashboard">
+      <div class="header">
+        <div class="header-title">
+          <h1>Trendline</h1>
+          <p>Precision weight analysis for optimal progress</p>
+        </div>
+        <div class="user-dropdown-container">
+          <button class="user-button" onclick="toggleUserDropdown(event)">
+            <span class="user-name">Dmitry</span>
+            <span class="user-avatar">D</span>
+          </button>
+          <div class="dropdown-menu hidden" id="userDropdown">
+            <button type="button" onclick="handleProfileClick()">
+              Profile
+            </button>
+            <button type="button" onclick="handleSettingsClick()">
+              Settings
+            </button>
+            <button type="button" onclick="handleLogoutClick()">Log out</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="control-row">
+          <div class="control-group">
+            <label>Time Period</label>
+            <select id="timePeriod">
+              <option value="all">All Time</option>
+              <option value="4w">Last 4 Weeks</option>
+              <option value="2w">Last 2 Weeks</option>
+              <option value="1w">Last 1 Week</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Smoothing</label>
+            <select id="smoothing">
+              <option value="3">3-Day Average</option>
+              <option value="7" selected>7-Day Average</option>
+              <option value="14">14-Day Average</option>
+              <option value="median">Median Filter</option>
+            </select>
+          </div>
+          <button onclick="updateAnalysis()">Update Analysis</button>
+          <button onclick="toggleOutlierRemoval()" id="outlierBtn">
+            Enable Outlier Removal
+          </button>
+          <button onclick="showStatsModal()">Show Advanced Stats</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="currentWeight">--</div>
+          <div class="stat-label">Current Weight</div>
+          <div class="stat-subtitle" id="weightChange">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="weeklyRate">--</div>
+          <div class="stat-label">Weekly Rate</div>
+          <div class="stat-subtitle">Last 2 weeks average</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalGain">--</div>
+          <div class="stat-label">Total Gain</div>
+          <div class="stat-subtitle" id="daysTracking">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="projectedTime">--</div>
+          <div class="stat-label">Target ETA</div>
+          <div class="stat-subtitle">To reach 74.3kg (15lb gain)</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">Weight Progress & Trends</div>
+        <div class="chart-wrapper">
+          <canvas id="weightChart"></canvas>
+        </div>
+      </div>
+
+      <div class="insights">
+        <h3>Analysis & Insights</h3>
+        <div id="insightsList"></div>
+      </div>
+
+      <div class="data-section">
+        <h3>Raw Data</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Weight (kg)</th>
+              <th>Change</th>
+              <th>7-Day Avg</th>
+              <th>Weekly Rate</th>
+            </tr>
+          </thead>
+          <tbody id="dataTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="settings-view hidden" id="settingsView">
+      <div class="settings-header">
+        <button class="back-button" onclick="hideSettingsView()">
+          Go back
+        </button>
+        <h2>Settings</h2>
+      </div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="control-group">
+            <label for="goalSelect">Goal Selection</label>
+            <select id="goalSelect">
+              <option value="gain">Gain weight</option>
+              <option value="lose">Lose weight</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="control-group">
+            <label for="rateType">Rate Type</label>
+            <select id="rateType" onchange="updateRateTypeFields()">
+              <option value="weight">Weight</option>
+              <option value="percentage">Percentage</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-row" id="speedFieldRow">
+          <div class="control-group">
+            <label id="speedFieldLabel" for="speedInput"
+              >Weekly weight rate</label
+            >
+            <input
+              type="number"
+              id="speedInput"
+              placeholder="0.25"
+              step="0.05"
+              min="0"
+            />
+            <span class="field-hint" id="speedFieldHint">kg / week</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="statsModal">
+      <div>
+        <h2>Advanced Statistics</h2>
+        <div id="advancedStats"></div>
+        <button onclick="hideStatsModal()" style="margin-top: 20px">
+          Close
+        </button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>
+        <span class="footer-item">Trendline Weight Tracker ©</span>
+        <span class="footer-item">Dmitry Chechotka</span>
+        <span class="footer-item">2025-2026</span>
+      </p>
+    </footer>
+
+    <script type="module" src="trendline.js"></script>
+    <script>
+      // Visual-only affordance: reflects toggle state on the button.
+      // Does not alter or depend on the outlier-removal logic in trendline.js.
+      (function () {
+        var btn = document.getElementById("outlierBtn");
+        if (!btn) return;
+        btn.addEventListener("click", function () {
+          btn.classList.toggle("is-active");
+          btn.textContent = btn.classList.contains("is-active")
+            ? "Outlier Removal On"
+            : "Enable Outlier Removal";
+        });
+      })();
+    </script>
+  </body>
+</html>
