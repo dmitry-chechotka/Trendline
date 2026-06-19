@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trendline Login</title>
+    <title>Trendline Registration</title>
     <link
       rel="icon"
       type="image/png"
@@ -27,11 +27,10 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="login-page">
-    <div class="login-page-shell">
-      <div id="successMessage" class="message-banner" aria-live="polite"></div>
-      <div class="login-card">
-        <div class="login-branding">
+  <body class="register-page">
+    <div class="register-page-shell">
+      <div class="register-card">
+        <div class="register-branding">
           <img
             src="assets/Trendline_Logo_No_Background.png"
             alt="Trendline logo"
@@ -40,11 +39,22 @@
           <p>Precision weight analysis for optimal progress</p>
         </div>
 
-        <form id="loginForm" class="login-form">
+        <form id="registrationForm" class="register-form">
           <div class="control-group">
-            <label for="email">Email</label>
+            <label for="username">Username</label>
             <input
-              id="email"
+              id="username"
+              type="text"
+              placeholder="Username"
+              autocomplete="name"
+              required
+            />
+          </div>
+
+          <div class="control-group">
+            <label for="registerEmail">Email</label>
+            <input
+              id="registerEmail"
               type="email"
               placeholder="Email"
               autocomplete="email"
@@ -53,24 +63,23 @@
           </div>
 
           <div class="control-group">
-            <label for="password">Password</label>
+            <label for="registerPassword">Password</label>
             <input
-              id="password"
+              id="registerPassword"
               type="password"
               placeholder="Password"
-              autocomplete="current-password"
+              autocomplete="new-password"
               required
             />
-            <div class="error-message" id="errorMessage"></div>
+            <div class="error-message" id="registerErrorMessage"></div>
           </div>
 
           <div class="action-group">
-            <button type="submit" class="primary">Log in</button>
-            <button type="button" class="secondary" id="createAccountButton">
-              Create an account
+            <button type="submit" class="primary">Create an account</button>
+            <button type="button" class="secondary" id="returnButton">
+              Return
             </button>
           </div>
-          <button type="button" class="link-button">Forgot password?</button>
         </form>
       </div>
     </div>

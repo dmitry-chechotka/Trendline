@@ -189,19 +189,37 @@ function toggleUserDropdown(event) {
 }
 
 function handleProfileClick() {
-  console.log("Profile clicked");
   closeUserDropdown();
+  window.location.href = 'profile.html';
 }
 
 function handleSettingsClick() {
   closeUserDropdown();
-  showSettingsView();
+  window.location.href = 'settings.html';
 }
 
 function handleLogoutClick() {
   console.log("Log out clicked");
   closeUserDropdown();
-  
+  showLogoutModal();
+}
+
+function showLogoutModal() {
+  const overlay = document.getElementById('logoutOverlay');
+  const modal = document.getElementById('logoutModal');
+  if (overlay) overlay.classList.remove('hidden');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function hideLogoutModal() {
+  const overlay = document.getElementById('logoutOverlay');
+  const modal = document.getElementById('logoutModal');
+  if (overlay) overlay.classList.add('hidden');
+  if (modal) modal.classList.add('hidden');
+}
+
+function confirmLogout() {
+  hideLogoutModal();
   signOut(auth)
     .then(() => {
       console.log("User signed out successfully");
@@ -212,37 +230,14 @@ function handleLogoutClick() {
     });
 }
 
+function cancelLogout() {
+  hideLogoutModal();
+}
+
 function closeUserDropdown() {
   const dropdown = document.getElementById("userDropdown");
   if (dropdown && !dropdown.classList.contains("hidden")) {
     dropdown.classList.add("hidden");
-  }
-}
-
-function showSettingsView() {
-  document.getElementById("mainDashboard").classList.add("hidden");
-  document.getElementById("settingsView").classList.remove("hidden");
-}
-
-function hideSettingsView() {
-  document.getElementById("settingsView").classList.add("hidden");
-  document.getElementById("mainDashboard").classList.remove("hidden");
-}
-
-function updateRateTypeFields() {
-  const rateType = document.getElementById("rateType").value;
-  const label = document.getElementById("speedFieldLabel");
-  const input = document.getElementById("speedInput");
-  const hint = document.getElementById("speedFieldHint");
-
-  if (rateType === "percentage") {
-    label.textContent = "Weekly percentage rate";
-    input.placeholder = "0.5";
-    hint.textContent = "% / week";
-  } else {
-    label.textContent = "Weekly weight rate";
-    input.placeholder = "0.25";
-    hint.textContent = "kg / week";
   }
 }
 
@@ -668,9 +663,11 @@ function updateAnalysis() {
   updateDataTable();
 }
 
-// Initialize
+// Initialize only on the main dashboard (home) to avoid running dashboard code on header-only pages
 document.addEventListener("DOMContentLoaded", function () {
-  loadWeightData();
+  if (document.getElementById("mainDashboard")) {
+    loadWeightData();
+  }
 });
 
 // Export functions to global scope for HTML onclick handlers
@@ -678,10 +675,9 @@ window.toggleUserDropdown = toggleUserDropdown;
 window.handleProfileClick = handleProfileClick;
 window.handleSettingsClick = handleSettingsClick;
 window.handleLogoutClick = handleLogoutClick;
+window.showLogoutModal = showLogoutModal;
+window.hideLogoutModal = hideLogoutModal;
+window.confirmLogout = confirmLogout;
+window.cancelLogout = cancelLogout;
 window.closeUserDropdown = closeUserDropdown;
-window.showSettingsView = showSettingsView;
-window.handleChangePasswordClick = handleChangePasswordClick;
-window.backToMainView = backToMainView;
-window.openStatsModal = openStatsModal;
-window.closeStatsModal = closeStatsModal;
 window.hideStatsModal = hideStatsModal;

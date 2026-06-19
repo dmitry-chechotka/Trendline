@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trendline Settings</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/apple-touch-icon.png"
+    />
+    <meta name="apple-mobile-web-app-title" content="Trendline" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="header-title">
+          <h1>
+            <a href="home.html">
+              <img
+                src="assets/Trendline_Logo_No_Background.png"
+                alt="Trendline logo"
+              />
+            </a>
+          </h1>
+          <p>Precision weight analysis for optimal progress</p>
+        </div>
+        <div class="user-dropdown-container">
+          <button class="user-button" onclick="toggleUserDropdown(event)">
+            <span class="user-name">Dmitry</span>
+            <span class="user-avatar">D</span>
+          </button>
+          <div class="dropdown-menu hidden" id="userDropdown">
+            <button type="button" onclick="handleProfileClick()">
+              Profile
+            </button>
+            <button type="button" onclick="handleSettingsClick()">
+              Settings
+            </button>
+            <button type="button" onclick="handleLogoutClick()">Log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container settings-page">
+      <div class="settings-card">
+        <div class="settings-header">
+          <div>
+            <h1>Settings</h1>
+            <p>Manage your tracking preferences and weight rate selection.</p>
+          </div>
+          <a class="back-button" href="home.html">Back to dashboard</a>
+        </div>
+
+        <div class="settings-row">
+          <div class="control-group">
+            <label for="goalSelect">Goal Selection</label>
+            <select id="goalSelect">
+              <option value="gain">Gain weight</option>
+              <option value="lose">Lose weight</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="control-group">
+            <label for="rateType">Rate Type</label>
+            <select id="rateType" onchange="updateRateTypeFields()">
+              <option value="weight">Weight</option>
+              <option value="percentage">Percentage</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row" id="speedFieldRow">
+          <div class="control-group">
+            <label id="speedFieldLabel" for="speedInput"
+              >Weekly weight rate</label
+            >
+            <input
+              type="number"
+              id="speedInput"
+              placeholder="0.25"
+              step="0.05"
+              min="0"
+            />
+            <span class="field-hint" id="speedFieldHint">kg / week</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>
+        <span class="footer-item">Trendline Weight Tracker ©</span>
+        <span class="footer-item">Dmitry Chechotka</span>
+        <span class="footer-item">2025-2026</span>
+      </p>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutOverlay" class="logout-overlay hidden"></div>
+    <div id="logoutModal" class="logout-modal hidden">
+      <div class="logout-modal-content">
+        <h2>Confirm logout</h2>
+        <p>Are you sure you want to log out?</p>
+        <div class="logout-modal-buttons">
+          <button class="logout-button" onclick="confirmLogout()">
+            Log out
+          </button>
+          <button class="cancel-button" onclick="cancelLogout()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="trendline.js"></script>
+    <script>
+      function updateRateTypeFields() {
+        const rateType = document.getElementById("rateType").value;
+        const label = document.getElementById("speedFieldLabel");
+        const input = document.getElementById("speedInput");
+        const hint = document.getElementById("speedFieldHint");
+
+        if (rateType === "percentage") {
+          label.textContent = "Weekly percentage rate";
+          input.placeholder = "0.5";
+          hint.textContent = "% / week";
+        } else {
+          label.textContent = "Weekly weight rate";
+          input.placeholder = "0.25";
+          hint.textContent = "kg / week";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        updateRateTypeFields();
+      });
+    </script>
+  </body>
+</html>

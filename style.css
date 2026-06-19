@@ -3,28 +3,30 @@
    Tokens
    ========================================================================== */
 :root {
-  --bg: #FAFAF8;
-  --surface: #FFFFFF;
-  --surface-sunken: #F4F4F2;
-  --ink: #17181C;
-  --ink-soft: #565A62;
-  --ink-faint: #8C9097;
-  --border: #E3E4E1;
-  --border-strong: #CBCDC8;
-  --accent: #3A5F8A;
-  --accent-soft: #EAF0F6;
-  --positive: #1F8A5F;
-  --positive-soft: #E8F4EE;
-  --warn: #B8862E;
-  --warn-soft: #FAF1E1;
-  --alert: #B0492F;
-  --alert-soft: #FBEAE5;
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --surface-sunken: #f4f4f2;
+  --ink: #17181c;
+  --ink-soft: #565a62;
+  --ink-faint: #8c9097;
+  --border: #e3e4e1;
+  --border-strong: #cbcdc8;
+  --accent: #3a5f8a;
+  --accent-soft: #eaf0f6;
+  --positive: #1f8a5f;
+  --positive-soft: #e8f4ee;
+  --warn: #b8862e;
+  --warn-soft: #faf1e1;
+  --alert: #b0492f;
+  --alert-soft: #fbeae5;
 
   --radius-sm: 4px;
   --radius-md: 6px;
 
-  --font-display: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display:
+    "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:
+    "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
 }
 
@@ -40,6 +42,139 @@ body {
   min-height: 100vh;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+}
+
+.login-page,
+.register-page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.login-page-shell,
+.register-page-shell {
+  width: min(100%, 420px);
+  padding: 0;
+}
+
+.login-card,
+.register-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(23, 24, 28, 0.08);
+  padding: 32px 30px;
+}
+
+.login-branding,
+.register-branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.brand-logo {
+  height: 2rem;
+  width: auto;
+  display: block;
+}
+
+.login-branding p,
+.register-branding p {
+  color: var(--ink-faint);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.login-form,
+.register-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.action-group {
+  display: grid;
+  gap: 9px;
+}
+
+.control-group input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.control-group input:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+button.primary {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: transparent;
+}
+
+button.primary:hover,
+button.primary:focus-visible {
+  background: #2c2d32;
+}
+
+button.secondary {
+  background: var(--surface-sunken);
+  color: var(--ink);
+  border-color: transparent;
+}
+
+button.secondary:hover,
+button.secondary:focus-visible {
+  background: #f1f2f1;
+}
+
+button.link-button {
+  background: transparent;
+  color: var(--accent);
+  border-color: transparent;
+  text-decoration: underline;
+}
+
+.message-banner {
+  display: none;
+  background: #eef4ef;
+  border: 1px solid #8bb69d;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  color: #2a6c57;
+  margin-bottom: 18px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.message-banner:empty {
+  display: none;
+}
+
+.message-banner:not(:empty) {
+  display: block;
+}
+
+.error-message {
+  min-height: 1.2rem;
+  color: var(--alert);
+  font-size: 0.95rem;
 }
 
 .container {
@@ -67,18 +202,30 @@ body {
   font-weight: 700;
   letter-spacing: -0.01em;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
 }
 
 .header h1::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  transform: translateY(-2px);
+  display: none;
+}
+
+.header-title img {
+  height: 3rem;
+  width: auto;
+  display: block;
+}
+
+.header-title h1 a {
+  display: inline-flex;
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-title h1 a:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 .header p {
@@ -261,6 +408,37 @@ select:focus-visible {
   outline-offset: 1px;
 }
 
+/* Make the weekly rate input 1.5x smaller than previous large size (~56px -> ~37px) */
+.settings-page .control-group input#speedInput {
+  min-height: 38px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+/* Center the settings and profile white cards in the viewport */
+.settings-page,
+.profile-page {
+  display: grid;
+  place-items: center;
+  /* Shrink total height so page content fits within the viewport when header is present */
+  min-height: calc(100vh - 200px);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.settings-page .settings-card,
+.profile-page .profile-card {
+  margin: 0;
+}
+
+/* Constrain the white card height so it doesn't push the page beyond the viewport */
+.settings-page .settings-card,
+.profile-page .profile-card {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+}
+
 /* Buttons: hierarchy instead of identical pills */
 button {
   padding: 8px 16px;
@@ -269,7 +447,10 @@ button {
   font-family: var(--font-body);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
   border: 1px solid transparent;
 }
 
@@ -287,7 +468,7 @@ button[onclick="updateAnalysis()"] {
 }
 
 button[onclick="updateAnalysis()"]:hover {
-  background: #2C2D32;
+  background: #2c2d32;
 }
 
 /* Toggle: Outlier Removal — styled as a switch-like control, not an action */
@@ -575,7 +756,7 @@ button[onclick="showStatsModal()"]:hover {
 }
 
 #statsModal button:hover {
-  background: #2C2D32;
+  background: #2c2d32;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -640,6 +821,150 @@ button[onclick="showStatsModal()"]:hover {
   button {
     width: 100%;
   }
+}
+
+/* Profile page */
+.profile-page {
+  padding-top: 16px;
+  padding-bottom: 24px;
+}
+
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px;
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.profile-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+}
+
+.profile-header p {
+  color: var(--ink-faint);
+  font-size: 0.95rem;
+}
+
+.profile-back-link {
+  align-self: flex-start;
+  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.profile-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 28px;
+  background: var(--surface-sunken);
+  flex-wrap: wrap;
+}
+
+.profile-avatar-display {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(58, 95, 138, 0.12);
+}
+
+.profile-avatar-details {
+  flex: 1 1 320px;
+  min-width: 220px;
+}
+
+.profile-avatar-label {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.profile-avatar-help {
+  margin-bottom: 16px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+}
+
+.profile-avatar-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.profile-avatar-note {
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+}
+
+.profile-field-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+
+.profile-field-card label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  font-weight: 700;
+}
+
+.profile-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.profile-field-value {
+  display: inline-flex;
+  align-items: center;
+  min-width: 220px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+}
+
+.profile-fields button {
+  margin: 0;
+}
+
+.profile-fields button:hover,
+.profile-avatar-actions button:hover,
+.profile-back-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Login page */
@@ -761,5 +1086,90 @@ button[onclick="showStatsModal()"]:hover {
     transition: none !important;
   }
 }
-  margin: 0 1rem;
+
+/* Logout Confirmation Modal */
+.logout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 99;
+  transition: opacity 0.15s ease;
+}
+
+.logout-overlay.hidden {
+  display: none;
+}
+
+.logout-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  transition: opacity 0.15s ease;
+}
+
+.logout-modal.hidden {
+  display: none;
+}
+
+.logout-modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  box-shadow: 0 24px 60px rgba(23, 24, 28, 0.12);
+  max-width: 360px;
+  text-align: center;
+}
+
+.logout-modal-content h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.logout-modal-content p {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.logout-modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.logout-button {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+  padding: 10px 24px;
+  font-weight: 600;
+}
+
+.logout-button:hover,
+.logout-button:focus-visible {
+  background: #2c2d32;
+  border-color: #2c2d32;
+}
+
+.cancel-button {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--border-strong);
+  padding: 10px 24px;
+  font-weight: 600;
+}
+
+.cancel-button:hover,
+.cancel-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
 }
